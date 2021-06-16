@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/Image/background.png</file>
+        <file>resources/Image/home_active.png</file>
+        <file>resources/Image/home_inactive.png</file>
+        <file>resources/Image/delete.png</file>
+        <file>resources/Image/hidekeyboard.png</file>
+        <file>resources/Image/move.png</file>
+        <file>resources/Image/shift_activated.png</file>
+        <file>resources/Image/shift_inactive.png</file>
+        <file>resources/Image/shift_normal.png</file>
+        <file>resources/Image/shift_press.png</file>
+        <file>resources/Image/backspace_normal.png</file>
+        <file>resources/Image/backspace_press.png</file>
+        <file>resources/Image/logox.png</file>
+        <file>resources/Image/bell.png</file>
+        <file>resources/Image/settings.png</file>
+        <file>resources/Image/history.png</file>
+        <file>resources/Image/datepicker.png</file>
+    </qresource>
+</RCC>
