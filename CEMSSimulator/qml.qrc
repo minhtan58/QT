@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Widget/QComboBox.qml</file>
+        <file>Widget/QTextInput.qml</file>
+        <file>Widget/QButton.qml</file>
+    </qresource>
+</RCC>

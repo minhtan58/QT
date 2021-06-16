@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv='Content-Type' content='text/html' charset='UTF-8' />
+      <meta name='viewport' content='initial-scale=1.0, user-scalable=no' />
+      <style>
+         div.container {width: 100%;height: 100%;}	 
+         header {padding: 1px;color: white;background-color: #0E637D;clear: left;text-align: left;} 
+         footer {position: fixed;right: 0;bottom: 0;left: 0;padding: 1px;background-color: #0E637D;color: white;text-align: center;}
+         body {font-family: Tahoma, Verdana, Arial, sans-serif; font-size: 0.8em;}
+		 .CaptionRow {font-weight:bold; background: #EFF3EB;}
+		 .OddRow {background: #EFF3EB;}
+		 .capitals {font-variant: small-caps;}
+      </style>
+      <script type='text/javascript'>
+        var xhttpUpdate;
+        var xhttpRequest;
+        var timer = 0;
+        var m_controller, m_serial, m_software, m_time, m_pH, m_oC, m_tss, m_flow, m_cod;
+        var m_stationConnectStatus, m_ftpConnectStatus;
+        var delayConnectionText = 0;
+         
+        xhttpUpdate = new XMLHttpRequest();
+        xhttpRequest = new XMLHttpRequest();
+		 
+        function sendMsgToHost(msg) {
+            xhttpRequest.open('POST', '', true);
+            xhttpRequest.onreadystatechange = callBack1;
+            xhttpRequest.send(msg);
+        }
+         
+        function callBack1() {
+            if (this.readyState == 4 && this.status == 200) {
+                var responseText = this.responseText;
+                if (responseText.includes('req_reload')) {
+                    location.reload();
+                } else if(responseText.includes('ReadInterval')) {
+                    updateValue();
+                }
+            } else {
+                document.getElementById('lblConnectStatus').innerHTML = 'No Connection';
+            }
+        }
+         
+        function callBack() {
+            if (this.readyState == 4 && this.status == 200) {
+                delayConnectionText = 0;
+                document.getElementById('lblConnectDevice').innerHTML = 'Connected';
+                var responseMsg = this.responseText;
+                var elements = responseMsg.split(',');
+                m_controller = elements[1];
+                m_serial = elements[2];
+                m_software = elements[3];
+                m_time = elements[4];
+                m_pH = elements[5];
+                m_oC = elements[6];
+                m_tss = elements[7];
+                m_flow = elements[8];
+                m_cod = elements[9];
+                m_stationConnectStatus = (elements[10] == '1') ? "Connected" : "No Connection";
+                m_ftpConnectStatus = elements[11];
+                updateStatus();
+            } else if(delayConnectionText++ == 1) {
+                document.getElementById('lblConnectDevice').innerHTML = 'No Connection';
+            }
+        }
+         
+        function updateValue() {
+            xhttpUpdate.open('POST', '', true);
+            xhttpUpdate.onreadystatechange = callBack;
+            xhttpUpdate.send('update');
+        }
+         
+        function updateStatus(){
+            document.getElementById('lblController').innerHTML = m_controller;
+            document.getElementById('lblSerial').innerHTML = m_serial;
+            document.getElementById('lblSoftware').innerHTML = m_software;
+            document.getElementById('lblTime').innerHTML = m_time;
+            document.getElementById('txtPH').value = m_pH;
+            document.getElementById('txtOC').value = m_oC;
+            document.getElementById('txtTSS').value = m_tss;
+            document.getElementById('txtFLOW').value = m_flow;
+            document.getElementById('txtCOD').value = m_cod;
+            document.getElementById('lblConnectStation').innerHTML = m_stationConnectStatus;
+            document.getElementById('lblConnectFTP').innerHTML = m_ftp;
+        }
+         
+        function clearTimerUpdate() {
+            clearInterval(timer);
+        }
+         
+        function startUpdate(interval) {
+            clearInterval(timer);
+            timer = setInterval(updateValue, interval);
+        }
+         
+      </script>
+   </head>
+   <title>KD201E</title>
+   <body onload='updateValue();startUpdate(5000)'>
+      <div class='container'>
+         <h1 class='capitals'>KD201E Dataview</h1>
+         <table width='100%'>
+            <tr width='100%'>
+               <td colspan='2'>
+                  <table cellpadding='5'>
+                     <tr width='100%'><th colspan='2' class='CaptionRow'>Station Status Information</th></tr>
+                     <tr><td>Logger Status:</td><td id='lblConnectDevice'>Connected</td></tr>
+                     <tr><td>Connection Local Station:</td><td id='lblConnectStation'>Connected</td></tr>
+                     <tr><td>FTP Server Connection:</td><td id='lblConnectFTP'>Connected</td></tr>
+                     <tr><td>Controller:</td><td id='lblController'></td></tr>
+                     <tr><td>Serial:</td><td id='lblSerial'></td></tr>
+                     <tr><td>Software:</td><td id='lblSoftware'></td></tr>
+                     <tr><td>Time:</td><td id='lblTime'></td></tr>
+                     <tr><td>History Data:</td><td><a href='/dataview' target='_blank'>DataView</a></td></tr>
+                  </table>
+               </td>
+            </tr>	
+            <tr>
+               <td colspan='2'>
+                  <table cellpadding='2'>
+                     <tr class='CaptionRow'>
+                        <th colspan='3' class='CaptionRow'>Data Table</th>
+                     </tr>
+                     <tr class='EvenRow'>
+                        <td><strong>pH</strong></td>
+                        <td><input type='text' id='txtPH' disabled /></td>
+                        <td></td>
+                     </tr>
+                     <tr class='OddRow'>
+                        <td><strong>Temp</strong></td>
+                        <td><input type='text' id='txtOC' disabled /></td>
+                        <td>°C</td>
+                     </tr>
+                     <tr class='EvenRow'>
+                        <td><strong>TSS</strong></td>
+                        <td><input type='text' id='txtTSS' disabled /></td>
+                        <td>mg/L</td>
+                     </tr>
+                     <tr class='OddRow'>
+                        <td><strong>Flow</strong></td>
+                        <td><input type='text' id='txtFLOW' disabled /></td>
+                        <td>m<SUP>3</SUP>/h</td>
+                     </tr>
+                     <tr class='EvenRow'>
+                        <td><strong>COD</strong></td>
+                        <td><input type='text' id='txtCOD' disabled /></td>
+                        <td>mg/L</td>
+                     </tr>	 
+                  </table>
+               </td>
+            </tr>
+            <tr><td></br></br></td></tr>
+         </table>
+         <footer>Copyright © 2017 KingKong Vietnam JSC</footer>
+      </div>
+   </body>
+</html>

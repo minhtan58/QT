@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/qml/main.qml</file>
+        <file>resources/qml/screen/scrThermalNormal.qml</file>
+        <file>resources/qml/widget/CameraImage.qml</file>
+    </qresource>
+</RCC>

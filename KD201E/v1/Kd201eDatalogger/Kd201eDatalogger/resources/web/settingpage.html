@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv='Content-Type' content='text/html' charset='UTF-8' />
+      <meta name='viewport' content='initial-scale=1.0, user-scalable=no' />
+      <link rel='icon' href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAM1SURBVHhe7dxBbtpAGIZh6BlMuABUchJfgIpEYke6qVj0CAlSFvQAlRxL3XWTLCKhHoEFygp2kVpULuAqXsAFKNwhnSR/q6TYY3/N2J5G3yOkjFEW0ZvxYMaIauXsrELZvJKflAFjARgLwFgAxgIwFoCxAIwFYCwAYwEYC8BYAMYCMBaAsQCMBWAsAGMBGAvAWADGAjAWgLEAjAVgLABjAeJv37c6p9/bjhwkmI6Do1DGxaqfn/YHKX+dIZvZm8vruRxwZiEYC8BYAMYCMBaAsQCMBWAswP94UZqFN/F7XRkneHrBmUWxseqdRb/dkIO/Ga2fS6xCTkPVyPdv1SO5lNLt3f+O7088ecY2ecdS/+GURtvuq52e1+XQHnnG8t7fpp4LiZxB31907AqWWyxVqufK+F812n2reuUTSy1Szy71QPWyZwnLI5Y3ARcpvW7PlvXLfKxW5yB1nVrOhtUgkMc4kmcTOYNDK2aX8Vjex5QLtM3FMGher+RICUfVYDyVgwTugQ2Ty3Qsz9VPq+n48sOjUL+FRynzy3m7V34tw7GOXf26Hl0lXaOHXy82MozVcPdaMiyN2Vj13ZqM4kXRFxltW92sZRTPcfZlVBqzsXZea9er5eanjOL82GinVqW2W/aJaDRWvdaUUbzFOma5+mO+1k+t8ple4F80xgIUGqtZ0606rZr+1aF8RmOt1gsZxWs4OzKKs+/or2bXN7oVrwhmZ1Z4pb+0dN1jGW17zmVHQQyfhmkv/+67pDd53qH+sx76y45iGI41v/6mf5eXsIXgTVK2dKLPj99OlsT4Ah9+mukn19YWaJYNVQvOQcV4rPTJpTTa/Yd7E3eP9G3C6GRkxU0387EybCFgpuORDdNKySOWyjXKsKWXyXI2tOdWbj6xFBO9puOn24Rlyy2WkmULNFF0Elj38YA8Y90Jj4KgOpwt5TCLu33namDLOvVYsV82pvusg2oUu+NsEX4zGyDv0/BFYSwAYwEYC8BYAMYCMBaAsQCMBWAsAGMBGAvAWADGAjAWgLEAjAVgLABjARgLwFgAxgIwFoCxAIwFYCwAYwEYC8BYAMYCMBaAsQCMlVml8gtfh95hA2Zb4QAAAABJRU5ErkJggg=='>
+      <style>
+         div.container { width: 100%;height: 100%;border: 1px solid gray;}
+         header {padding: 1px;color: white;background-color: #0E637D;clear: left;text-align: left;}
+         nav {color: #0E637D; background-color: white;border-bottom: 1px solid gray;clear: left;text-align: center;}
+         section {border: 1px solid gray;}
+         aside {display: block;}
+         footer {position: fixed;right: 0;bottom: 0;left: 0;padding: 1px;background-color: #0E637D;color: white;text-align: center;}
+         th {padding: 5px;color: white;background-color: #0E637D;align: center;}
+         td {color: #0E637D;}
+         input { text-align: center; font-weight:bold;}
+         .textValue {width: 95%;height: 100%;min-width: 50px;padding: 5px;}
+         .singleLine {white-space: nowrap; overflow: hidden; text-overflow:ellipsis;}
+         .tableInfo {border-collapse: collapse; width: 100%;}
+         .tdValue, .thValue {padding: 8px;text-align: left;border-bottom: 1px solid #ddd;}
+         [type='checkbox'] {vertical-align:middle;}
+      </style>
+      <script type='text/javascript'>
+         var xhttpRequest;
+         var isContainsValidField;
+         xhttpRequest = new XMLHttpRequest();
+         
+         function sendMsgToHost(msg) {
+            xhttpRequest.open('POST', '', true);
+            xhttpRequest.onreadystatechange = callBack;
+            xhttpRequest.send(msg);
+         }
+         
+         function callBack() {
+            if (this.readyState == 4 && this.status == 200) {
+                var responseText = this.responseText;
+                if (responseText.includes('req_reload')) {
+                    location.reload();
+                }
+                else if(responseText.includes('CurrentSettings'))
+                    updateSettingValue(responseText);
+            }
+            else
+                document.getElementById('lblConnectStatus').innerHTML = 'Disconnected';
+         }
+         
+         function updateSettingValue(settingsText) {
+            var elements = settingsText.split(',');
+            document.getElementById('txtStationName').value = elements[1];
+            document.getElementById('txtCompanyName').value = elements[2];
+            document.getElementById('txtStationType').value = elements[3];
+            document.getElementById('txtLocalAddress').value = elements[4];
+            document.getElementById('txtFtpServer').value = elements[6];
+            document.getElementById('txtFtpUser').value = elements[7];
+            document.getElementById('txtFtpPassword').value = elements[8];
+         
+            if(elements[5] != "" || elements[5] != "!")
+                document.getElementById('cbbTimer').value = elements[5];
+            else
+                document.getElementById('cbbTimer').value = "3000";
+				
+                if(elements[9] != "" || elements[9] != "!")
+                    document.getElementById('cbbTimeUse').value = elements[9];
+                else
+                    document.getElementById('cbbTimeUse').value = "true";
+         }
+		 
+         function checkValid(control){
+            if (document.getElementById(control).value == "" || document.getElementById(control).value == "!") {
+                isContainsValidField = 1;
+                alert(control + "\nText is null")
+            }
+            else
+                isContainsValidField = 0;
+         }
+         
+         function saveAllSetting() {
+            checkValid('txtStationName'); 	if(isContainsValidField == 1) return;
+            checkValid('txtCompanyName'); 	if(isContainsValidField == 1) return;
+            checkValid('txtStationType');	if(isContainsValidField == 1) return;
+            checkValid('txtLocalAddress');	if(isContainsValidField == 1) return;
+            checkValid('cbbTimer');		if(isContainsValidField == 1) return;
+            checkValid('txtFtpServer');         if(isContainsValidField == 1) return;
+            checkValid('txtFtpUser');           if(isContainsValidField == 1) return;
+            checkValid('txtFtpPassword');	if(isContainsValidField == 1) return;
+            checkValid('cbbTimeUse');           if(isContainsValidField == 1) return;
+			
+            var saveValue = "SaveSetting," +
+            document.getElementById('txtStationName').value + "," +
+            document.getElementById('txtCompanyName').value + "," +
+            document.getElementById('txtStationType').value + "," +
+            document.getElementById('txtLocalAddress').value + "," +
+            document.getElementById('cbbTimer').value + "," +
+            document.getElementById('txtFtpServer').value + "," +
+            document.getElementById('txtFtpUser').value + "," +
+            document.getElementById('txtFtpPassword').value + "," +
+            document.getElementById('cbbTimeUse').value;
+            sendMsgToHost(saveValue);
+         }
+         
+      </script>
+      </head>
+      <title>Controlled Online System</title>
+      <body onload='sendMsgToHost("res_getCurrentSetting");'>
+      <div class='container'>
+         <nav>
+            <h2>KD201E SETTINGS</h2>
+         </nav>
+            <table align='center'>
+               <tr>
+                  <td colspan='4'>
+                     <table width='100%'>
+                        <tr>
+                           <th colspan='2'>SETTINGS</th>
+                        </tr>
+                        <tr>
+                           <td align='center'>
+                              <table class='tableValue'>
+                                 <tr>
+                                    <th colspan='3'>Server Settings</th>
+                                 </tr>
+                                 <tr>
+                                    <td class='tdValue'><strong><font size='3' class='singleLine'>Company Code: </font></strong></td>
+                                    <td class='tdValue'><input type="text" id="txtCompanyName" size='25' class='textValue' disabled /></td>
+                                    <td class='tdValue'><input type="checkbox" onclick='txtCompanyName.disabled=!this.checked;'>Edit</input></td>
+                                 </tr>
+                                 <tr>
+                                    <td class='tdValue'><strong><font size='3' class='singleLine'>Station Code: </font></strong></td>
+                                    <td class='tdValue'><input type="text" id="txtStationName" size='25' class='textValue' disabled /></td>
+                                    <td class='tdValue'><input type="checkbox" onclick='txtStationName.disabled=!this.checked;'>Edit</input></td>
+                                 </tr>
+                                 <tr>
+                                    <td class='tdValue'><strong><font size='3' class='singleLine'>Station Type: </font></strong></td>
+                                    <td class='tdValue'><input type='text' id='txtStationType' size='25' class='textValue' disabled /></td>
+                                    <td class='tdValue'><input type="checkbox" onclick='txtStationType.disabled=!this.checked;'>Edit</input></td>
+                                 </tr>
+                                 <tr>
+                                    <td class='tdValue'><strong><font size='3' class='singleLine'>Station Address: </font></strong></td>
+                                    <td class='tdValue'><input type='text' id='txtLocalAddress' size='25' class='textValue' disabled /></td>
+                                    <td class='tdValue'><input type="checkbox" onclick='txtLocalAddress.disabled=!this.checked;'>Edit</input></td>
+                                 </tr>
+                                 <tr>
+                                    <td class='tdValue'><strong><font size='3'>Timer: </font></strong></td>
+                                    <td colspan='3' class='tdValue'>
+                                       <select id='cbbTimer'>
+                                          <option value='5000'>5 sec (test mode)</option>
+                                          <option value='60000'>1 min</option>
+                                          <option value='120000'>2 min</option>
+                                          <option value='300000'>5 min</option>
+                                          <option value='600000'>10 min</option>
+                                          <option value='900000'>15 min</option>
+                                          <option value='1800000'>30 min</option>
+                                       </select>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class='tdValue'><strong><font size='3'>Time Use: </font></strong></td>
+                                    <td colspan='3' class='tdValue'>
+                                       <select id='cbbTimeUse'>
+                                          <option value='true'>HTML (source time)</option>
+                                          <option value='false'>Datalogger (Kd201e Time)</option>
+                                       </select>
+                                    </td>
+                                 </tr>
+                              </table>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td align='center'>
+                              <table class='tableValue'>
+                                 <tr>
+                                    <th colspan='3'>FTP Settings</th>
+                                 </tr>
+                                 <tr>
+                                    <td class='tdValue'><strong><font size='3'>Server: </font></strong></td>
+                                    <td class='tdValue'><input type="text" id="txtFtpServer" class='textValue' size='25' value='103.56.156.55' disabled /></td>
+                                    <td class='tdValue'><input type="checkbox" name="cbFtpIP" onclick='txtFtpServer.disabled=!this.checked'>Edit</input></td>
+                                 </tr>
+                                 <tr>
+                                    <td class='tdValue'><strong><font size='3'>Username: </font></strong></td>
+                                    <td class='tdValue'><input type='text' id='txtFtpUser' class='textValue' size='25' value='data@bestflashes.com' disabled/></td>
+                                    <td class='tdValue'><input type="checkbox" onclick='txtFtpUser.disabled=!this.checked;'>Edit</input></td>
+                                 </tr>
+                                 <tr>
+                                    <td class='tdValue'><strong><font size='3'>Password: </font></strong></td>
+                                    <td class='tdValue'><input type='password' id='txtFtpPassword' class='textValue' size='25' value='i31tHo4W'/></td>
+                                    <td class='tdValue'><input type='checkbox' onclick='if(this.checked) txtFtpPassword.type="text"; else txtFtpPassword.type="password";'>Show</input></td>
+                                 </tr>
+                              </table>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td colspan='2' align='center'>
+                              <button onclick='saveAllSetting();'>Save All Setting</button>
+                           </td>
+                        </tr>
+                     </table>
+                  </td>
+               </tr>
+             <tr><td></br></br></br></td></tr>
+            </table>
+         <footer>Copyright © 2017 KingKong Vietnam JSC</footer>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>image/sample.png</file>
+        <file>qml/main.qml</file>
+        <file>qml/widget/QButton.qml</file>
+        <file>qml/widget/QText.qml</file>
+        <file>qml/widget/QTextInput.qml</file>
+    </qresource>
+</RCC>

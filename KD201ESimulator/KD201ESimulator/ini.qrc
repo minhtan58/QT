@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/config">
+        <file>resources/config.ini</file>
+    </qresource>
+    <qresource prefix="/web">
+        <file>resources/web/IQ WEB CONNECT.html</file>
+    </qresource>
+</RCC>

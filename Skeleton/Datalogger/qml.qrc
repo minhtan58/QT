@@ -1,0 +1,39 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/main.qml</file>
+        <file>resources/qmlScreen/scrDataView.qml</file>
+        <file>resources/qmlScreen/prtTopBar.qml</file>
+        <file>resources/qmlScreen/prtKeyboard.qml</file>
+        <file>resources/qmlScreen/scrSettingsOverview.qml</file>
+        <file>resources/qmlScreen/scrSettingsNetwork.qml</file>
+        <file>resources/qmlScreen/scrSettingsSerialPort.qml</file>
+        <file>resources/qmlScreen/scrSettingsAirCoefficient.qml</file>
+        <file>resources/qmlScreen/scrSettingsGeneral.qml</file>
+        <file>resources/qmlScreen/prtKeyboardNumberOnly.qml</file>
+        <file>resources/qmlScreen/scrSettingsDevelopment.qml</file>
+        <file>resources/Widget/QButton.qml</file>
+        <file>resources/Widget/QStatusBarWidget.qml</file>
+        <file>resources/Widget/QViewWidget.qml</file>
+        <file>resources/Widget/QScrollBar.qml</file>
+        <file>resources/Widget/QSlider.qml</file>
+        <file>resources/Widget/QCheckbox.qml</file>
+        <file>resources/Widget/QSwitch.qml</file>
+        <file>resources/Widget/QKeyWidget.qml</file>
+        <file>resources/Widget/QLeftTabView.qml</file>
+        <file>resources/Widget/QTabDelegate.qml</file>
+        <file>resources/Widget/QDigitKey.qml</file>
+        <file>resources/Widget/QTextInput.qml</file>
+        <file>resources/Widget/QTabWidget.qml</file>
+        <file>resources/Widget/QComboBox.qml</file>
+        <file>resources/Widget/QSpinBox.qml</file>
+        <file>resources/qmlScreen/qnCommon.qml</file>
+        <file>resources/qmlScreen/scrSettingsAlarm.qml</file>
+        <file>resources/qmlScreen/splashScreen.qml</file>
+        <file>resources/qmlScreen/scrHistoryDataView.qml</file>
+        <file>resources/Widget/QListView.qml</file>
+        <file>resources/Widget/ListDelegate/DataHistoryDelegate.qml</file>
+        <file>resources/Widget/QText.qml</file>
+        <file>resources/Widget/QDatePicker.qml</file>
+        <file>resources/qmlScreen/popupExportFile.qml</file>
+    </qresource>
+</RCC>

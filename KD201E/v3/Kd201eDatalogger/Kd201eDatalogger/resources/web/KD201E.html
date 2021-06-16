@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv='Content-Type' content='text/html' charset='UTF-8' />
+      <meta name='viewport' content='initial-scale=1.0, user-scalable=no' />
+      <link rel='icon' href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAM1SURBVHhe7dxBbtpAGIZh6BlMuABUchJfgIpEYke6qVj0CAlSFvQAlRxL3XWTLCKhHoEFygp2kVpULuAqXsAFKNwhnSR/q6TYY3/N2J5G3yOkjFEW0ZvxYMaIauXsrELZvJKflAFjARgLwFgAxgIwFoCxAIwFYCwAYwEYC8BYAMYCMBaAsQCMBWAsAGMBGAvAWADGAjAWgLEAjAVgLABjAeJv37c6p9/bjhwkmI6Do1DGxaqfn/YHKX+dIZvZm8vruRxwZiEYC8BYAMYCMBaAsQCMBWAswP94UZqFN/F7XRkneHrBmUWxseqdRb/dkIO/Ga2fS6xCTkPVyPdv1SO5lNLt3f+O7088ecY2ecdS/+GURtvuq52e1+XQHnnG8t7fpp4LiZxB31907AqWWyxVqufK+F812n2reuUTSy1Szy71QPWyZwnLI5Y3ARcpvW7PlvXLfKxW5yB1nVrOhtUgkMc4kmcTOYNDK2aX8Vjex5QLtM3FMGher+RICUfVYDyVgwTugQ2Ty3Qsz9VPq+n48sOjUL+FRynzy3m7V34tw7GOXf26Hl0lXaOHXy82MozVcPdaMiyN2Vj13ZqM4kXRFxltW92sZRTPcfZlVBqzsXZea9er5eanjOL82GinVqW2W/aJaDRWvdaUUbzFOma5+mO+1k+t8ple4F80xgIUGqtZ0606rZr+1aF8RmOt1gsZxWs4OzKKs+/or2bXN7oVrwhmZ1Z4pb+0dN1jGW17zmVHQQyfhmkv/+67pDd53qH+sx76y45iGI41v/6mf5eXsIXgTVK2dKLPj99OlsT4Ah9+mukn19YWaJYNVQvOQcV4rPTJpTTa/Yd7E3eP9G3C6GRkxU0387EybCFgpuORDdNKySOWyjXKsKWXyXI2tOdWbj6xFBO9puOn24Rlyy2WkmULNFF0Elj38YA8Y90Jj4KgOpwt5TCLu33namDLOvVYsV82pvusg2oUu+NsEX4zGyDv0/BFYSwAYwEYC8BYAMYCMBaAsQCMBWAsAGMBGAvAWADGAjAWgLEAjAVgLABjARgLwFgAxgIwFoCxAIwFYCwAYwEYC8BYAMYCMBaAsQCMlVml8gtfh95hA2Zb4QAAAABJRU5ErkJggg=='>
+      <style>
+         div.container {width: 100%;height: 100%;}
+         nav {color: #0E637D;background-color: white;clear: left;text-align: center;} 
+         footer {position: fixed;right: 0;bottom: 0;left: 0;padding: 1px;background-color: #0E637D;color: white;text-align: center;}
+         th {padding: 5px;color: white;background-color: #0E637D;align: center;}
+         td {color: #0E637D;}
+         label {vertical-align: middle;}
+         input {text-align: center; font-weight:bold;font-family:arial;margin-right:1px; width:100%}
+        .tableInfo {border-collapse: collapse; width: 100%;}
+        .infoTh, .infoTd {padding: 8px;text-align: left;border-bottom: 1px solid #ddd;}
+        .infoTd3Right {padding: 5px;text-align: right;border-bottom: 1px solid #ddd; width: 40%}
+        .infoTd3Center {padding: 5px;text-align: center;border-bottom: 1px solid #ddd; width: 20%}
+        .infoTd3Left {padding: 5px;text-align: left;border-bottom: 1px solid #ddd; width: 40%}
+        .infoTdRight {padding: 8px;text-align: right;border-bottom: 1px solid #ddd; width: 50%}
+        .textValue {width: 90%;height: 100%;min-width: 50px;padding: 5px;}
+        .singleLine {white-space: nowrap; overflow: hidden; text-overflow:ellipsis;}
+        .tableValue, .tdValue, .thValue { border: 1px solid #ddd; text-align: left;}
+        .tableValue {border-collapse: collapse; width: 100%;}
+        .thValue, .tdValue {padding: 15px;}
+      </style>
+      <script type='text/javascript'>
+        var xhttpUpdate;
+        var xhttpRequest;
+        var timer = 0;
+        var m_controller, m_serial, m_software, m_time, m_pH, m_oC, m_tss, m_flow, m_cod;
+        var m_stationConnectStatus, m_ftpConnectStatus;
+        var delayConnectionText = 0;
+         
+        xhttpUpdate = new XMLHttpRequest();
+        xhttpRequest = new XMLHttpRequest();
+
+        function sendMsgToHost(msg) {
+            xhttpRequest.open('POST', '', true);
+            xhttpRequest.onreadystatechange = callBack1;
+            xhttpRequest.send(msg);
+        }
+         
+        function callBack1() {
+            if (this.readyState == 4 && this.status == 200) {
+                var responseText = this.responseText;
+                if (responseText.includes('req_reload')) {
+                    location.reload();
+                } else if(responseText.includes('ReadInterval')) {
+                    updateValue();
+                }
+            } else {
+                document.getElementById('lblConnectStatus').innerHTML = 'No Connection';
+            }
+        }
+         
+        function callBack() {
+            if (this.readyState == 4 && this.status == 200) {
+                delayConnectionText = 0;
+                document.getElementById('lblConnectDevice').innerHTML = 'Connected';
+                var responseMsg = this.responseText;
+                var elements = responseMsg.split(',');
+                m_controller = elements[1];
+                m_serial = elements[2];
+                m_software = elements[3];
+                m_time = elements[4];
+                m_pH = elements[5];
+                m_oC = elements[6];
+                m_tss = elements[7];
+                m_flow = elements[8];
+                m_cod = elements[9];
+                m_stationConnectStatus = (elements[10] == '1') ? "Connected" : "No Connection";
+                m_ftpConnectStatus = elements[11];
+                updateStatus();
+            } else if(delayConnectionText++ == 1) {
+                document.getElementById('lblConnectDevice').innerHTML = 'No Connection';
+            }
+        }
+         
+        function updateValue() {
+            xhttpUpdate.open('POST', '', true);
+            xhttpUpdate.onreadystatechange = callBack;
+            xhttpUpdate.send('update');
+        }
+         
+        function updateStatus(){
+            document.getElementById('lblController').innerHTML = m_controller;
+            document.getElementById('lblSerial').innerHTML = m_serial;
+            document.getElementById('lblSoftware').innerHTML = m_software;
+            document.getElementById('lblTime').innerHTML = m_time;
+            document.getElementById('txPH').value = m_pH;
+            document.getElementById('txtOC').value = m_oC;
+            document.getElementById('txtTSS').value = m_tss;
+            document.getElementById('txtFLOW').value = m_flow;
+            document.getElementById('txtCOD').value = m_cod;
+            document.getElementById('lblConnectStation').innerHTML = m_stationConnectStatus;
+            document.getElementById('lblConnectFTP').innerHTML = m_ftp;
+        }
+         
+        function clearTimerUpdate() {
+            clearInterval(timer);
+        }
+         
+        function startUpdate(interval) {
+            clearInterval(timer);
+            timer = setInterval(updateValue, interval);
+        }
+         
+      </script>
+   </head>
+   <title>KD201E</title>
+   <body onload='updateValue();startUpdate(5000)'>
+      <div class='container'>
+         <nav>
+            <h2>KD201E Dataview</h2>
+         </nav>
+         <table width='100%'>
+            <tr align='center'>
+               <td colspan='2'>
+                  <table cellpadding='5' class='tableInfo'>
+                     <tr width='100%'>
+                        <th colspan='2'>Station Information</th>
+                     </tr>
+                     <tr class='infoTr'>
+                        <td class='infoTdRight'><strong><font size='3' class='singleLine'>Device Status:</font></strong></td>
+                        <td class='infoTd' colspan='3'><label id='lblConnectDevice'>Connected</label></td>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3' class='singleLine'>HTML Source Status:</font></strong></td>
+                        <td class='infoTd'><label id="lblConnectStation">Connected</label></td>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3' class='singleLine'>FTP Server Status:</font></strong></td>
+                        <td class='infoTd'><label id="lblConnectFTP">Connected</label></td>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3' class='singleLine'>Controller:</font></strong></td>
+                        <td class='infoTd'><label id="lblController"></label></td>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3' class='singleLine'>Serial:</font></strong></td>
+                        <td class='infoTd'><label id="lblSerial"></label></td>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3' class='singleLine'>Software:</font></strong></td>
+                        <td class='infoTd'><label id='lblSoftware'></label></td>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3' class='singleLine'>Time:</font></strong></td>
+                        <td class='infoTd'><label id='lblTime'></label></td>
+                     </tr>
+                     <tr class='infoTr'>
+                        <td class='infoTdRight'><strong><font size='3' class='singleLine'>History Data:</font></strong></td>
+                        <td class='infoTd' colspan='3'><a href='/history' target='_blank'>History</a></td>
+                     </tr>
+                  </table>
+               </td>
+            </tr>
+            <tr align='center'>
+               <td width='100%' valign='top' colspan='2'>
+                  <table cellpadding='2' class='tableInfo'>
+                     <tr width='100%'>
+                        <th colspan='3' align='center'>Data Table</th>
+                     </tr>
+                     <tr>
+                        <td class='infoTd3Right'><strong>pH</strong></td>
+                        <td class='infoTd3Center'><input type='text' id='txPH' class='textValue' disabled /></td>
+                        <td class='infoTd3Left'></td>
+                     </tr>
+                     <tr>
+                        <td class='infoTd3Right'><strong>Temp</strong></td>
+                        <td class='infoTd3Center'><input type='text' id='txtOC' class='textValue' disabled /></td>
+                        <td class='infoTd3Left'>°C</td>
+                     </tr>
+                     <tr>
+                        <td class='infoTd3Right'><strong>TSS</strong></td>
+                        <td class='infoTd3Center'><input type='text' id='txtTSS' class='textValue' disabled /></td>
+                        <td class='infoTd3Left'>mg/L</td>
+                     </tr>
+                     <tr>
+                        <td class='infoTd3Right'><strong>Flow</strong></td>
+                        <td class='infoTd3Center'><input type='text' id='txtFLOW' class='textValue' disabled /></td>
+                        <td class='infoTd3Left'>m<sup>3</sup>/h</td>
+                     </tr>
+                     <tr>
+                        <td class='infoTd3Right'><strong>COD</strong></td>
+                        <td class='infoTd3Center'><input type='text' id='txtCOD' class='textValue' disabled /></td>
+                        <td class='infoTd3Left'>mg/L</td>
+                     </tr>
+                  </table>
+               </td>
+            </tr>
+            <tr><td></br></br></td></tr>
+         </table>
+         <footer>Copyright © 2017 KingKong Vietnam JSC</footer>
+      </div>
+   </body>
+</html>

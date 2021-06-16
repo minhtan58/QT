@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="refresh" content="5">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta name="viewport" content="width=device-width">
+    <title>Data View</title>
+        <style type="text/css">
+                body {font-family: Tahoma, Verdana, Arial, sans-serif; font-size: 0.8em;}
+                .CaptionRow {font-weight:bold; background: #EFF3EB;}
+                .OddRow {background: #EFF3EB;}
+                .capitals {font-variant: small-caps;}
+        </style>
+</head>
+
+<script type='text/javascript'>
+   var xhttpRequest;
+   xhttpRequest = new XMLHttpRequest();
+
+   function sendMsgToHost(msg) {
+      xhttpRequest.open('POST', '', true);
+      xhttpRequest.onreadystatechange = callBack;
+      xhttpRequest.send(msg);
+   }
+
+   function callBack() {
+      if (this.readyState == 4 && this.status == 200) {
+          var responseText = this.responseText;
+      }
+      else {}
+   }
+
+    function downloadFile(fileName) {
+        var downloadLink = document.getElementById('link');
+        downloadLink.href = fileName;
+        downloadLink.click();
+    }
+
+</script>
+
+<body><h1 class="capitals">History Data Row</h1>
+
+<h2>Overview sensors</h2>
+
+<a id="link" download hidden></a>
+<input type='date' id='txtSearch'>
+<button onclick='sendMsgToHost(txtSearch.value)'>View</button>
+
+<table border="0" cellspacing="2%" cellpadding="3%">
+        <colgroup>
+        <col class="SensorID">
+        <col class="SensorState">
+        <col class="SensorModel">
+        <col class="SensorSerNo">
+        <col class="SensorName">
+        <col class="MainValue">
+        <col class="MainValUnit">
+        <col class="MainValPara">
+        <col class="SubValue">
+        <col class="SubValUnit">
+        <col class="SensorInfo">
+        </colgroup>
+        <thead>
+        <tr class="CaptionRow">
+                <td>Time</td>
+                <td>Status</td>
+                <td>pH</td>
+                <td colspan="2">Temperature</td>
+                <td colspan="2">TSS</td>
+                <td colspan="2">FLOW</td>
+                <td colspan="2">COD</td>
+                <td>Export</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="EvenRow">
+                <td>2018-07-23 16:53:12</td>
+                <td>1</td>
+                <td>6.34</td>
+                <td>29.6</td>
+                <td>°C</td>
+                <td>63.5</td>
+                <td>mg/L</td>
+                <td>4.53</td>
+                <td>m3/h</td>
+                <td>34.4</td>
+                <td>mg/L</td>
+                <td><button>Export</button></td>
+        </tr>
+        <tr class="OddRow">
+                <td>2018-07-24 16:53:12</td>
+                <td>0</td>
+                <td>6.34</td>
+                <td>29.6</td>
+                <td>°C</td>
+                <td>63.5</td>
+                <td>mg/L</td>
+                <td>4.53</td>
+                <td>m3/h</td>
+                <td>34.4</td>
+                <td>mg/L</td>
+                <td><button>Export</button></td>
+        </tr>
+</tbody></table>
+</body></html>

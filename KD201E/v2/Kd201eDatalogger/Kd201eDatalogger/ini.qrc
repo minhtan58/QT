@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/config">
+        <file>resources/config.ini</file>
+    </qresource>
+    <qresource prefix="/web">
+        <file>resources/web/KD201E.html</file>
+        <file>resources/web/settingpage.html</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv='Content-Type' content='text/html' charset='UTF-8' />
+      <meta name='viewport' content='initial-scale=1.0, user-scalable=no' />
+      <style>
+         div.container {width: 100%; height: 100%;}
+         nav {color: #0E637D; background-color: white; clear: left; text-align: center;}
+         footer {position: fixed; right: 0; bottom: 0;left: 0; padding: 1px; background-color: #0E637D; color: white; text-align: center;}
+         th {padding: 5px; color: white; background-color: #0E637D; align: center;}
+         td {color: #0E637D;}
+         input {text-align: center; font-weight:bold; font-family:arial; margin-right:1px}
+         .tableInfo {border-collapse: collapse; width: 100%;}
+         .infoTdRight {padding: 5px; text-align: right; border-bottom: 1px solid #ddd; width: 40%}
+         .infoTdCenter {padding: 5px; text-align: center; border-bottom: 1px solid #ddd; width: 20%}
+         .infoTdLeft {padding: 5px; text-align: left; border-bottom: 1px solid #ddd; width: 40%}
+         .textValue {width: 90%; height: 100%; min-width: 50px; padding: 5px;}
+         .singleLine {white-space: nowrap; overflow: hidden; text-overflow:ellipsis;}
+      </style>
+      <script type='text/javascript'>
+         var xhttpRequest = new XMLHttpRequest();
+         
+         function sendMsgToHost(msg) {
+            xhttpRequest.open('POST', '', true);
+            xhttpRequest.onreadystatechange = callBack;
+            xhttpRequest.send(msg);
+         }
+         
+         function callBack() {
+            if (this.readyState == 4 && this.status == 200) {
+                var responseText = this.responseText;
+                if (responseText.includes('req_reload')) {
+                    location.reload();
+                } else if(responseText.includes('CurrentSettings')) {
+                    updateSettingValue(responseText);
+                }
+            }
+         }
+         
+         function updateSettingValue(settingsText) {
+            var elements = settingsText.split(',');
+            document.getElementById('txtDeviceId').value = elements[1];
+            document.getElementById('txtDeviceName').value = elements[2];
+            document.getElementById('cbbType').value = elements[3];
+            document.getElementById('txtMinTemp').value = elements[4];
+            document.getElementById('txtMaxTemp').value = elements[5];
+            document.getElementById('txtVerifyTime').value = elements[6];
+            document.getElementById('txtServerIP').value = elements[7];
+            document.getElementById('txtServerPort').value = elements[8];
+         }
+         
+         function saveAllSetting() {
+            var saveValue = "$SaveSetting," +
+            document.getElementById('txtDeviceId').value + "," +
+            document.getElementById('txtDeviceName').value + "," +
+            document.getElementById('cbbType').value + "," +
+            document.getElementById('txtMinTemp').value + "," +
+            document.getElementById('txtMaxTemp').value + "," +
+            document.getElementById('txtVerifyTime').value + "," +
+            document.getElementById('txtServerIP').value + "," +
+            document.getElementById('txtServerPort').value;
+            sendMsgToHost(saveValue);
+         }
+         function backHome() {
+            var downloadLink = document.getElementById('link');
+            downloadLink.href = '/';
+            downloadLink.click();
+         }
+         
+      </script>
+   </head>
+   <title>VinCAM® FD</title>
+   <body onload='sendMsgToHost("getCurrentSetting");'>
+      <div class='container'>
+         <nav><h1>Cài đặt VinCAM® FD</h1></nav>
+         <table width='100%'>
+            <tr align='center'>
+               <td colspan='2'>
+                  <table cellpadding='2' class='tableInfo'>
+                     <tr width='100%'>
+                        <th colspan='3'>CÀI ĐẶT THIẾT BỊ</th>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3' class='singleLine'>Tên: </font></strong></td>
+                        <td class='infoTdCenter'><input type="text" id="txtDeviceName" size='25' class='textValue' disabled /></td>
+                        <td class='infoTdLeft'><input type="checkbox" onclick='txtDeviceName.disabled=!this.checked;'> Sửa</input></td>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3' class='singleLine'>Mã thiết bị: </font></strong></td>
+                        <td class='infoTdCenter'><input type="text" id="txtDeviceId" size='25' class='textValue' disabled /></td>
+                        <td class='infoTdLeft'><input type="checkbox" onclick='txtDeviceId.disabled=!this.checked;'> Sửa</input></td>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3'>Ứng dụng: </font></strong></td>
+                        <td class='infoTdCenter'>
+                           <select id='cbbType'>
+                              <option value='0'>Hỏa Hoạn</option>
+                              <option value='1'>Kho Lạnh</option>
+                              <option value='2'>An Ninh</option>
+                              <option value='3'>Đo Nhiệt</option>
+                           </select>
+                        </td>
+                       <td class='infoTdLeft'></td>
+                     </tr>
+                  </table>
+               </td>
+            </tr>
+            <tr></tr>
+            <tr align='center'>
+               <td colspan='2'>
+                  <table cellpadding='2' class='tableInfo'>
+                     <tr width='100%'>
+                        <th colspan='3'>CÀI ĐẶT QUANG NHIỆT</th>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3'>Ngưỡng trên (°C): </font></strong></td>
+                        <td class='infoTdCenter'><input type="text" id="txtMaxTemp" class='textValue' size='25' disabled /></td>
+                        <td class='infoTdLeft'><input type="checkbox" onclick='txtMaxTemp.disabled=!this.checked'> Sửa</input></td>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3'>Ngưỡng dưới (°C): </font></strong></td>
+                        <td class='infoTdCenter'><input type="text" id="txtMinTemp" class='textValue' size='25' disabled /></td>
+                        <td class='infoTdLeft'><input type="checkbox" onclick='txtMinTemp.disabled=!this.checked'> Sửa</input></td>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3'>Cảnh báo (giây): </font></strong></td>
+                        <td class='infoTdCenter'><input type="text" id="txtVerifyTime" class='textValue' size='25' disabled /></td>
+                        <td class='infoTdLeft'><input type="checkbox" onclick='txtVerifyTime.disabled=!this.checked'> Sửa</input></td>
+                     </tr>
+                  </table>
+               </td>
+            </tr>
+            <tr></tr>
+            <tr align='center'>
+               <td colspan='2'>
+                  <table cellpadding='2' class='tableInfo'>
+                     <tr width='100%'>
+                        <th colspan='3'>CÀI ĐẶT MÁY CHỦ</th>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3'>Địa chỉ IP: </font></strong></td>
+                        <td class='infoTdCenter'><input type="text" id="txtServerIP" class='textValue' size='25' disabled /></td>
+                        <td class='infoTdLeft'><input type="checkbox" onclick='txtServerIP.disabled=!this.checked'> Sửa</input></td>
+                     </tr>
+                     <tr>
+                        <td class='infoTdRight'><strong><font size='3'>Cổng: </font></strong></td>
+                        <td class='infoTdCenter'><input type="text" id="txtServerPort" class='textValue' size='25' disabled /></td>
+                        <td class='infoTdLeft'><input type="checkbox" onclick='txtServerPort.disabled=!this.checked'> Sửa</input></td>
+                     </tr>
+                  </table>
+               </td>
+            </tr>
+            <tr></tr>
+            <tr>
+               <td colspan='3' align='center'>
+                  <button onclick='saveAllSetting();'>Lưu Cài Đặt</button>
+                  <a id='link'></a>
+                  <button onclick='backHome();'>Quay Lại</button>
+               </td>
+            </tr>
+            <tr><td></br></br></td></tr>
+         </table>
+         <footer>Copyright © 2018 VinCAM</footer>
+      </div>
+   </body>
+</html>
